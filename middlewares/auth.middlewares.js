@@ -12,7 +12,7 @@ const isLoggedIn = (req, res, next) => {
 
   try {
       // Verify the token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SEC);
       req.user = decoded; // Attach user info to the request
       next(); // Proceed to the next middleware or route handler
   } catch (error) {

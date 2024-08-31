@@ -1,10 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const isLoggedIn = require('../middlewares/auth.middlewares'); // Path to your middleware
-const itineraryValidations = require('../middlewares/itineraryValidations'); // Path to your validations
-const createItinerary = require('../controllers/itinerary.controller').createItinerary; // Path to your controller
+const { createItinerary, getItinerary, updateItinerary, deleteItinerary } = require('../controllers/itinerary.controller');
 
-// Route to create a new itinerary with authentication and validation
-router.post('/', isLoggedIn, itineraryValidations, createItinerary);
+// Route to create a new itinerary
+router.post('/create', createItinerary);
+
+// Route to get an existing itinerary by ID
+router.get('/get/:id', getItinerary);
+
+// Route to update an existing itinerary by ID
+router.put('/update/:id', updateItinerary);
+
+// Route to delete an existing itinerary by ID
+router.delete('/delete/:id', deleteItinerary);
 
 module.exports = router;
