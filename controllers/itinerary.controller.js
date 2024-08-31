@@ -1,6 +1,15 @@
-const User = require("../models/user.model"); // Assuming you have a User model
+const User = require("../models/user.model");
 const Itinerary = require("../models/itinerary.models");
+const jwt = require("jsonwebtoken");
+/*
 
+const jwtToken = jwt.sign(
+                    { email: user.email, _id: user._id },
+                    process.env.JWT_SEC,
+                    { expiresIn: "24h" }
+                );
+
+                */
 // Create a new itinerary
 const createItinerary = async (req, res) => {
     try {
@@ -10,7 +19,28 @@ const createItinerary = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
+        const token = req.cookies.token;
+        console.log(req.cookies);
+        if (!token) {
+            return res.status(401).json({ status: "Token missing or invalid" });
+        }
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SEC);
+        } catch (err) {
+            return res
+                .status(401)
+                .json({ status: "Authentication error, please sign in again" });
+        }
+
+        const foundUser = await User.findOne({ email: decoded.email });
+        if (!foundUser) {
+            return res.status(404).json({ status: "User not found" });
+        }
+
         const newItinerary = new Itinerary({
+            userId: foundUser._id,
             title,
             description,
             startDate,
@@ -20,7 +50,6 @@ const createItinerary = async (req, res) => {
         });
 
         const savedItinerary = await newItinerary.save();
-
         res.status(201).json({
             message: "Itinerary created successfully",
             data: savedItinerary,
@@ -39,8 +68,6 @@ const getItinerary = async (req, res) => {
             return res.status(404).json({ message: "Itinerary not found" });
         }
 
-        console.log("Retrieved userId from itinerary:", itinerary.userId); // Log the userId
-
         const user = await User.findById(itinerary.userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -48,8 +75,10 @@ const getItinerary = async (req, res) => {
 
         res.status(200).json({ itinerary, user });
     } catch (error) {
-        console.error("Error retrieving itinerary or user:", error); // Log the error
-        res.status(500).json({ message: "Error retrieving itinerary or user", error });
+        res.status(500).json({
+            message: "Error retrieving itinerary or user",
+            error,
+        });
     }
 };
 // Update an existing itinerary by ID

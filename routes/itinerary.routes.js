@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const {
-  createItinerary,
-  getItinerary,
-  updateItinerary,
-  deleteItinerary,
+    createItinerary,
+    getItinerary,
+    updateItinerary,
+    deleteItinerary,
 } = require("../controllers/itinerary.controller");
 
 // Route to create a new itinerary
