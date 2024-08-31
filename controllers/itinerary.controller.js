@@ -1,3 +1,4 @@
+const User = require("../models/user.model"); // Assuming you have a User model
 const Itinerary = require("../models/itinerary.models");
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
@@ -60,20 +61,27 @@ const createItinerary = async (req, res) => {
     }
 };
 
+
 // Get an existing itinerary by ID
 const getItinerary = async (req, res) => {
-    try {
-        const itinerary = await Itinerary.findById(req.params.id);
-        if (!itinerary) {
-            return res.status(404).json({ message: "Itinerary not found" });
-        }
-        res.status(200).json(itinerary);
-    } catch (error) {
-        res.status(500).json({ message: "Error retrieving itinerary", error });
+  try {
+    const itinerary = await Itinerary.findById(req.params.id);
+    if (!itinerary) {
+      return res.status(404).json({ message: "Itinerary not found" });
     }
+
+    const user = await User.findById(itinerary.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ itinerary, user });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving itinerary or user", error });
+  }
 };
 
-// Update an existing itinerary by ID
+//  Update an existing itinerary by ID
 const updateItinerary = async (req, res) => {
     try {
         const itinerary = await Itinerary.findByIdAndUpdate(

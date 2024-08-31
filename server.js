@@ -9,7 +9,7 @@ const authRoute = require("./routes/auth.routes");
 const itineraryRoute = require("./routes/itinerary.routes");
 
 // app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
@@ -24,5 +24,5 @@ app.get("/ping", (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log("Server stared!");
+  console.log("Server stared on port: "+port+"!");
 });
