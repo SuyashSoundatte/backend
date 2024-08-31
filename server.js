@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const db = require("./database/db")();
 const authRoute = require("./routes/auth.routes");
 const itineraryRoute = require("./routes/itinerary.routes");
+const userRoute = require("./routes/user.routes");
 
 // app.use(bodyParser.json());
 // app.use(express.urlencoded({ extended: true }));
@@ -17,12 +18,13 @@ app.use("/api/auth", authRoute);
 
 app.use("/api/itinerary", itineraryRoute);
 
+app.use("/api/user", userRoute);
 const port = process.env.PORT || 8080;
 
 app.get("/ping", (req, res) => {
-    res.send("Hello");
+    return res.json({ status: "working" });
 });
 
 app.listen(port, () => {
-  console.log("Server stared on port: "+port+"!");
+    console.log("Server stared on port: " + port + "!");
 });
