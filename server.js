@@ -17,11 +17,9 @@ app.use(cookieParser());
 app.use(cors());
 app.use("/api/auth", authRoute);
 
-app.use("/api/itinerary", isLoggedIn, itineraryRoute);
-app.use("/api/places", isLoggedIn, placesRoute);
-app.use("/users", userRoute);
-
-app.use("/api/user", userRoute);
+app.use("/api/itinerary", itineraryRoute);
+app.use("/users", userRoutes);
+app.use("/uploads", express.static("uploads"));
 const port = process.env.PORT || 8080;
 
 app.get("/ping", (req, res) => {
