@@ -17,7 +17,7 @@ app.use("/api/auth", authRoute);
 
 app.use("/api/itinerary", itineraryRoute);
 app.use("/users", userRoutes);
-
+app.use("/uploads", express.static("uploads"));
 const port = process.env.PORT || 8080;
 
 app.get("/ping", (req, res) => {
