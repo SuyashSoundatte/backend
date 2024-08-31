@@ -1,27 +1,25 @@
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model'); // Adjust import path as necessary
-
 const isLoggedIn = (req, res, next) => {
   // Get token from headers or cookies
-  const token = req.headers['authorization']?.split(' ')[1] || req.cookies.token;
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1] || req.cookies.token;
 
   if (!token) {
-      return res.status(401).json({ message: 'No token provided, authorization denied.' });
+    return res.status(401).json({ message: 'No token provided, authorization denied.' });
   }
 
   try {
-      // Verify the token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded; // Attach user info to the request
-      next(); // Proceed to the next middleware or route handler
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // Attach user info to the request
+    next(); // Proceed to the next middleware or route handler
   } catch (error) {
-      console.error('Token verification failed:', error);
-      res.status(401).json({ message: 'Token is not valid.' });
+    console.error('Token verification failed:', error);
+    res.status(401).json({ message: 'Token is not valid.' });
   }
 };
-
-
 const signupValidations = (req, res, next) => {
   const schema = Joi.object({
     name: Joi.string().min(3).max(100).required(),
@@ -50,7 +48,7 @@ const loginValidations = (req, res, next) => {
 };
 
 // Middleware for creating or updating an itinerary
-const itineraryValidations = (req, res, next) => {
+const itineraryValidationsJoi = (req, res, next) => {
   const schema = Joi.object({
     title: Joi.string().min(3).max(100).required(),
     start_date: Joi.date().iso().required(),
@@ -81,7 +79,6 @@ const itineraryValidations = (req, res, next) => {
   next();
 };
 
-// Middleware for validating expense input
 const expenseValidations = (req, res, next) => {
   const schema = Joi.object({
     category: Joi.string().min(3).max(100).required(),
@@ -97,7 +94,6 @@ const expenseValidations = (req, res, next) => {
   next();
 };
 
-// Middleware for validating location input
 const locationValidations = (req, res, next) => {
   const schema = Joi.object({
     name: Joi.string().min(2).max(100).required(),
@@ -117,7 +113,6 @@ const locationValidations = (req, res, next) => {
   next();
 };
 
-// Middleware for validating activity input
 const activityValidations = (req, res, next) => {
   const schema = Joi.object({
     name: Joi.string().min(2).max(100).required(),
@@ -133,4 +128,4 @@ const activityValidations = (req, res, next) => {
   next();
 };
 
-module.exports = { signupValidations, loginValidations, itineraryValidations, expenseValidations, locationValidations, activityValidations, isLoggedIn };
+module.exports = { signupValidations, loginValidations, itineraryValidationsJoi, expenseValidations, locationValidations, activityValidations, isLoggedIn };
