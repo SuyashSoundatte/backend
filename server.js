@@ -18,9 +18,9 @@ app.use("/api/itinerary", itineraryRoute);
 const port = process.env.PORT || 8080;
 
 app.get("/ping", (req, res) => {
-  res.send("Hello");
+    res.send("Hello");
 });
 
 app.listen(port, () => {
-  console.log("Server stared!");
+    console.log("Server stared!");
 });
