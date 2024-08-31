@@ -5,6 +5,7 @@ const {
     getItinerary,
     updateItinerary,
     deleteItinerary,
+    getSuggestItineraries,
 } = require("../controllers/itinerary.controller");
 
 // Route to create a new itinerary
@@ -18,5 +19,7 @@ router.put("/update/:id", updateItinerary);
 
 // Route to delete an existing itinerary by ID
 router.delete("/delete/:id", deleteItinerary);
+
+router.get("/suggest", getSuggestItineraries);
 
 module.exports = router;
