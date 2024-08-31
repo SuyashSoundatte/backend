@@ -120,7 +120,7 @@ const deleteItinerary = async (req, res) => {
 };
 
 const getSuggestItineraries = (req, res) => {
-    const userPreferences = req.body.preferences; //["hills", "beach"];
+    const userPreferences = req.body.preferences; //"hills"
     const itineraries = suggestItineraries(userPreferences);
     return res.json(itineraries);
 };
