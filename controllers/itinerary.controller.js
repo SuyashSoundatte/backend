@@ -13,10 +13,9 @@ const jwtToken = jwt.sign(
 // Create a new itinerary
 const createItinerary = async (req, res) => {
     try {
-        const { title, description, startDate, endDate, destinations } =
-            req.body;
+        const { title, description, startDate, endDate, destinations, userId } = req.body;
 
-        if (!title || !description || !startDate || !endDate || !destinations) {
+        if (!title || !description || !startDate || !endDate || !destinations || !userId) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -47,6 +46,7 @@ const createItinerary = async (req, res) => {
             startDate,
             endDate,
             destinations,
+            userId,
         });
 
         const savedItinerary = await newItinerary.save();
@@ -81,8 +81,7 @@ const getItinerary = async (req, res) => {
         });
     }
 };
-
-//  Update an existing itinerary by ID
+// Update an existing itinerary by ID
 const updateItinerary = async (req, res) => {
     try {
         const itinerary = await Itinerary.findByIdAndUpdate(
@@ -113,7 +112,6 @@ const deleteItinerary = async (req, res) => {
 };
 
 module.exports = {
-    createItinerary,
     createItinerary,
     getItinerary,
     updateItinerary,

@@ -17,6 +17,15 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+   
+    phoneNumber: {
+        type: String,
+        trim: true
+    },
+    profilePic: {
+        type: String,
+        trim: true
+    },
     preferences: {
         type: Map,
         of: String,
