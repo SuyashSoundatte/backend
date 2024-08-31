@@ -7,24 +7,27 @@ const cookieParser = require("cookie-parser");
 const db = require("./database/db")();
 const authRoute = require("./routes/auth.routes");
 const itineraryRoute = require("./routes/itinerary.routes");
-const userRoutes = require("../backend/routes/user.routes");
-// app.use(bodyParser.json());
-// app.use(express.urlencoded({ extended: true }));
+const userRoute = require("../backend/routes/user.routes");
+const placesRoute = require("../backend/routes/places.routes");
+const { isLoggedIn } = require("../backend/middlewares/auth.middlewares");
+
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use("/api/auth", authRoute);
 
-app.use("/api/itinerary", itineraryRoute);
-app.use("/users", userRoutes);
+app.use("/api/itinerary", isLoggedIn, itineraryRoute);
+app.use("/api/places", isLoggedIn, placesRoute);
+app.use("/users", userRoute);
 
 app.use("/api/user", userRoute);
 const port = process.env.PORT || 8080;
 
 app.get("/ping", (req, res) => {
-  res.send("Hello ");
+    res.send("Hello ");
 });
 
 app.listen(port, () => {
-  console.log("Server stared on port: " + port + "!");
+    console.log("Server stared on port: " + port + "!");
 });
