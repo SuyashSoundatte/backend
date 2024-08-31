@@ -13,9 +13,17 @@ const jwtToken = jwt.sign(
 // Create a new itinerary
 const createItinerary = async (req, res) => {
     try {
-        const { title, description, startDate, endDate, destinations, userId } = req.body;
+        const { title, description, startDate, endDate, destinations, userId } =
+            req.body;
 
-        if (!title || !description || !startDate || !endDate || !destinations || !userId) {
+        if (
+            !title ||
+            !description ||
+            !startDate ||
+            !endDate ||
+            !destinations ||
+            !userId
+        ) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
