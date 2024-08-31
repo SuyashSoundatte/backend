@@ -1,5 +1,15 @@
 const Itinerary = require("../models/itinerary.models");
+const User = require("../models/user.model");
+const jwt = require("jsonwebtoken");
+/*
 
+const jwtToken = jwt.sign(
+                    { email: user.email, _id: user._id },
+                    process.env.JWT_SEC,
+                    { expiresIn: "24h" }
+                );
+
+                */
 // Create a new itinerary
 const createItinerary = async (req, res) => {
     try {
@@ -10,7 +20,28 @@ const createItinerary = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
+        const token = req.cookies.token;
+        console.log(req.cookies);
+        if (!token) {
+            return res.status(401).json({ status: "Token missing or invalid" });
+        }
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SEC);
+        } catch (err) {
+            return res
+                .status(401)
+                .json({ status: "Authentication error, please sign in again" });
+        }
+
+        const foundUser = await User.findOne({ email: decoded.email });
+        if (!foundUser) {
+            return res.status(404).json({ status: "User not found" });
+        }
+
         const newItinerary = new Itinerary({
+            userId: foundUser._id,
             title,
             description,
             startDate,
@@ -19,7 +50,6 @@ const createItinerary = async (req, res) => {
         });
 
         const savedItinerary = await newItinerary.save();
-
         res.status(201).json({
             message: "Itinerary created successfully",
             data: savedItinerary,
@@ -27,13 +57,6 @@ const createItinerary = async (req, res) => {
     } catch (error) {
         console.error("Error creating itinerary:", error);
         res.status(500).json({ message: "Internal server error" });
-    }
-    try {
-        const itinerary = new Itinerary(req.body);
-        await itinerary.save();
-        res.status(201).json(itinerary);
-    } catch (error) {
-        res.status(500).json({ message: "Error creating itinerary", error });
     }
 };
 
