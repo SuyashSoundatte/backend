@@ -10,6 +10,7 @@ const itineraryRoute = require("./routes/itinerary.routes");
 const userRoute = require("../backend/routes/user.routes");
 const placesRoute = require("../backend/routes/places.routes");
 const weatherRoute = require("../backend/routes/weather.routes");
+const hotelsRoute = require("./routes/hotels.routes.js");
 const { isLoggedIn } = require("../backend/middlewares/auth.middlewares");
 
 //todo: add isLoggedIn middlewares to following
@@ -22,6 +23,8 @@ app.use("/api/auth", authRoute);
 app.use("/api/itinerary", itineraryRoute);
 app.use("/api/places", placesRoute);
 app.use("/api/weather", weatherRoute);
+app.use("/api/hotels", hotelsRoute);
+
 app.use("/users", userRoute);
 app.use("/uploads", express.static("uploads"));
 const port = process.env.PORT || 8080;
